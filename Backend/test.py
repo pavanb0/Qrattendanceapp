@@ -73,27 +73,27 @@ def attendace(username,password,subject,qr):
 # Example usage
 if __name__ == '__main__':
     # Test signup
-    # time.sleep(1)
-    # signup_response = signup('pavan', 'pavan123')
+    # # time.sleep(1)
+    # signup_response = signup('Ritesh', 'pavan123')
     # print('Signup Response:', signup_response)
-    # time.sleep(1)
-    # # Test login
-    # login_response = login('pavan', 'pavan123')
+    # # time.sleep(1)
+    # # # Test login
+    # login_response = login('Ritesh', 'pavan123')
     # print('Login Response:', login_response)
-    # time.sleep(1)
-    # # Test setqrcode
+    # # time.sleep(1)
+    # # # Test setqrcode
 
-    # setqrcode_response = setqrcode('pavan', 'pavan123','1','Maths')
+    # setqrcode_response = setqrcode('Ritesh', 'pavan123','1','Maths')
     # print('setqrcode Response:', setqrcode_response)
-    # time.sleep(1)
-    # Test getqrcode
-    # getqrcode_response = getqrcode('pavan', 'pavan123','CHEMISTRY')
+    # # time.sleep(1)
+    # # Test getqrcode
+    # getqrcode_response = getqrcode('Ritesh', 'pavan123','Maths')
     # print('getqrcode Response:', getqrcode_response)
 
     # test attendance
     #   app.post("/attendances", (req, res) => {
     #   const {username, password,subject,qr} = req.body;
-    attendace_response = attendace('pavan', 'pavan123','CHEMISTRY','69422')
+    attendace_response = attendace('Ritesh', 'pavan123','Maths','30771')
     print('attendace Response:', attendace_response)
 
 
