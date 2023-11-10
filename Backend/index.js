@@ -4,7 +4,7 @@ const sqlite3 = require('sqlite3');
 const bcrypt = require('bcrypt');
 const app = express();
 const cors = require("cors");
-const port = 3000;
+const port = 3030;
 const ip = "192.168.0.104";
 class qr {
   constructor(qrcode, username) {
@@ -59,7 +59,7 @@ db.serialize(() => {
 
 app.post('/signup', async (req, res) => {
   const { username, password, teacher } = req.body;
-
+  // console.log(req.body);
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
@@ -70,6 +70,8 @@ app.post('/signup', async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   if (teacher == 1) {
+    console.log("teacher is 1")
+    
     db.run(
       'INSERT INTO users (username, password,teacher) VALUES (?, ?, ?)',
       [username, hashedPassword, teacher],
@@ -81,6 +83,7 @@ app.post('/signup', async (req, res) => {
       }
     );
   } else {
+    console.log("teacher is 0 ")
     db.run(
       'INSERT INTO users (username, password) VALUES (?, ?)',
       [username, hashedPassword],
@@ -96,13 +99,13 @@ app.post('/signup', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-
+  console.log(req.body);
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
 
   db.get(
-    'SELECT id, username, password FROM users WHERE username = ?',
+    'SELECT id, username, password, teacher FROM users WHERE username = ?',
     [username],
     async (err, row) => {
       if (err) {
@@ -119,7 +122,7 @@ app.post('/login', async (req, res) => {
         return res.status(401).json({ error: 'Incorrect password' });
       }
 
-      res.json({ message: 'Login successful', user: { id: row.id, username: row.username } });
+      res.json({ message: 'Login successful', user: { id: row.id, username: row.username, teacher:row.teacher } });
     }
   );
 });
