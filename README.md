@@ -1,20 +1,20 @@
 # Qrattendanceapp
-with this app you can mark attendace with ease using qr code
-installation for backend 
-set the ip in the index.js file 
-cd Backend;
-npm i;
-node index.js
+with this app you can mark attendace with ease using qr code <br>
+installation for backend <br>
+set the ip in the index.js file <br>
+cd Backend;<br>
+npm i; <br>
+node index.js<br>
 
-for frontend
-cd Frontend;
-cd lexqr;  //this is reactnative cli app use this
-// in the constant folder api_url.js add the server ip 
-npm i;
+for frontend<br>
+cd Frontend;<br>
+cd lexqr;  //this is reactnative cli app use this<br>
+// in the constant folder api_url.js add the server ip <br>
+npm i;<br>
 
-npm start;
+npm start;<br>
 
-😁👍👍👍👍 app is still under development but core functionality are working good
+😁👍👍👍👍 app is still under development but core functionality are working good<br>
 screenshots 
 ![Screenshot_2023-11-11-22-55-44-897_com lexqr](https://github.com/pavanb0/Qrattendanceapp/assets/96296445/55d3a2bc-ae45-4fd4-95e6-c53d7f2d4273)
 ![Screenshot_2023-11-11-22-55-29-004_com lexqr](https://github.com/pavanb0/Qrattendanceapp/assets/96296445/b55d3e5e-92fe-4b68-a766-cca24ef16768)
