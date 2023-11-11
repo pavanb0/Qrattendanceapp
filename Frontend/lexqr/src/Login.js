@@ -43,11 +43,11 @@ function Login({ navigation }) {
             // navigation.navigate('TeacherHome', {user: data.user});
             // console.log("teacher login successful");
             ToastAndroid.show("teacher login successful", ToastAndroid.SHORT);
-            navigation.navigate('Teachers', {user: data.user.username});
+            navigation.navigate('Teachers', {username: data.user.username,password:password});
           }else{
             // console.log("student login successful");
             ToastAndroid.show("student login successful", ToastAndroid.SHORT);
-            navigation.navigate('Students', {user: data.user.username});
+            navigation.navigate('Students', {username: data.user.username,password:password});
           }
 
         } else{

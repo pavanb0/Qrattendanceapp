@@ -1,7 +1,7 @@
 import requests
 import time
 # Set the base URL of your API
-base_url = 'http://192.168.0.104:3000'
+base_url = 'http://192.168.0.104:3030'
 
 # Function to create a new user account
 def signup(username, password):
@@ -69,6 +69,19 @@ def attendace(username,password,subject,qr):
     except Exception as e:
         return {'error': 'Invalid response from the server'}
 
+# app.post("/getattendances", (req, res) => {
+#   const {username, password} = req.body;
+#   if (!username || !password) {
+
+def getattendances(username,password):
+    url = f'{base_url}/getattendances'
+    data = {'username': username, 'password': password}
+    response = requests.post(url, json=data)
+    try:
+        return response.json()
+    except Exception as e:
+        return {'error': 'Invalid response from the server'}
+
 
 # Example usage
 if __name__ == '__main__':
@@ -87,15 +100,19 @@ if __name__ == '__main__':
     # print('setqrcode Response:', setqrcode_response)
     # # time.sleep(1)
     # # Test getqrcode
-    # getqrcode_response = getqrcode('Ritesh', 'pavan123','Maths')
+    # getqrcode_response = getqrcode('Ritesh', 'pavan123','Biology')
     # print('getqrcode Response:', getqrcode_response)
 
     # test attendance
     #   app.post("/attendances", (req, res) => {
     #   const {username, password,subject,qr} = req.body;
-    attendace_response = attendace('Ritesh', 'pavan123','Maths','30771')
+
+    attendace_response = attendace('google', 'googlegoogle','Maths','714521')
     print('attendace Response:', attendace_response)
 
+    # # Test getattendances
+    # getattendances_response = getattendances('Ritesh', 'pavan123')
+    # print('getattendances Response:', getattendances_response)
 
 
     # # Test removeqr

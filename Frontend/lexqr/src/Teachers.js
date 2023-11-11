@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, View,Text } from 'react-native';
+import { Button, View,Text,StyleSheet } from 'react-native';
 
 function Teachers({ route,navigation }) {
-  const {user} = route.params;
+  const {username,password} = route.params;
+  console.log(username,password);
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Home Screen {user}</Text>
+        <Text style={{color:'black'}}>Home Screen {username}</Text>
         <Button
           title="Go to Login"
           onPress={() => navigation.navigate('Login')}
@@ -14,4 +15,7 @@ function Teachers({ route,navigation }) {
     );
 }
 
+const styles = StyleSheet.create({
+
+});
 export default Teachers;

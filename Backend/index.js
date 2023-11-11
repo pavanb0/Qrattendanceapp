@@ -176,7 +176,50 @@ app.post("/setqrcode", (req, res) => {
 
 })
 
-app.post("/attendances", (req, res) => {
+app.post("/getattendances", (req, res) => {
+  const {username, password} = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+  db.get(
+    'SELECT id, username, password FROM users WHERE username = ?',
+    [username],
+    async (err, row) => {
+      if (err) {
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      if (!row) {
+        return res.status(401).json({ error: 'User not found' });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, row.password);
+
+      if (!passwordMatch) {
+        return res.status(401).json({ error: 'Incorrect password' });
+      }
+      db.all(
+        "SELECT * FROM attendance WHERE username = ?",[username],
+          async (err, row) => {
+            if (err) {
+              return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            if (!row) {
+              return res.status(401).json({ error: 'Internal server error' });
+            }
+            console.log(row);
+            res.status(200).json({ attendances: row, message: "Succesful" })
+          }
+        )
+    }
+  );
+})
+
+
+
+
+app.post("/setattendances", (req, res) => {
   const {username, password,subject,qr} = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
