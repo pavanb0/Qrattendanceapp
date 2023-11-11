@@ -59,7 +59,7 @@ db.serialize(() => {
 
 app.post('/signup', async (req, res) => {
   const { username, password, teacher } = req.body;
-  // console.log(req.body);
+  console.log(req.body);
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
@@ -166,7 +166,7 @@ app.post("/setqrcode", (req, res) => {
           }
         );
 
-        res.json({ message: 'Qr setted', user: { id: row.id, username: row.username } });
+        res.json({ message: 'Qr setted', user: { id: row.id, username: row.username,qr:qrcode } });
       }
     );
   } else {
@@ -176,6 +176,45 @@ app.post("/setqrcode", (req, res) => {
 
 })
 
+app.post("/getattendancesteacher", (req, res) => {
+  const {username, password, subject} = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+  db.get(
+    'SELECT id, username, password FROM users WHERE username = ? and teacher = 1',
+    [username],
+    async (err, row) => {
+      if (err) {
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      if (!row) {
+        return res.status(401).json({ error: 'User not found' });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, row.password);
+
+      if (!passwordMatch) {
+        return res.status(401).json({ error: 'Incorrect password' });
+      }
+      db.all(
+        "SELECT * FROM attendance WHERE subject = ?",[ subject],
+          async (err, row) => {
+            if (err) {
+              return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            if (!row) {
+              return res.status(401).json({ error: 'Internal server error' });
+            }
+            console.log(row,"row");
+            res.status(200).json({ attendances: row, message: "Succesful" })
+          }
+        )
+    }
+  );
+})
 app.post("/getattendances", (req, res) => {
   const {username, password} = req.body;
   if (!username || !password) {
@@ -217,13 +256,60 @@ app.post("/getattendances", (req, res) => {
 })
 
 
-
-
-app.post("/setattendances", (req, res) => {
-  const {username, password,subject,qr} = req.body;
+app.post("/getsubjects", (req, res) => {
+  const { username, password } = req.body;
+  console.log(req.body);
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
+
+  db.get(
+    'SELECT id, username, password, teacher FROM users WHERE username = ? and teacher = 1',
+    [username],
+    async (err, row) => {
+      if (err) {
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      if (!row) {
+        return res.status(401).json({ error: 'User not found' });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, row.password);
+
+      if (!passwordMatch) {
+        return res.status(401).json({ error: 'Incorrect password' });
+      }
+
+      db.all(
+        "SELECT * FROM subject WHERE teacher = ?",[username],
+          async (err, row) => {
+            if (err) {
+              return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            if (!row) {
+              return res.status(401).json({ error: 'Internal server error' });
+            }
+            console.log(row);
+            res.status(200).json({ subjects: row, message: "Succesful" })
+          }
+        )
+    }
+  );
+
+
+});
+
+
+
+app.post("/setattendances", (req, res) => {
+  const { username, password, qr } = req.body;
+  console.log(req.body);
+  if (!username || !password || !qr) {
+    return res.status(400).json({ error: 'Username, password, and QR code are required' });
+  }
+
   db.get(
     'SELECT id, username, password FROM users WHERE username = ?',
     [username],
@@ -241,30 +327,38 @@ app.post("/setattendances", (req, res) => {
       if (!passwordMatch) {
         return res.status(401).json({ error: 'Incorrect password' });
       }
+
       db.get(
-        "SELECT qrcode FROM subject WHERE subject = ?",[subject],
-          async (err, row) => {
-            if (row.qrcode == qr) {
-              db.run(
-                'INSERT INTO attendance (username, date, time, qrcode, subject) VALUES (?, ?, ?, ?, ?)',
-                [username, new Date().toLocaleDateString(), new Date().toLocaleTimeString(), qr, subject],
-                (err) => {
-                  if (err) {
-                    return res.status(500).json({ error: 'User registration failed' });
-                  }
-                  res.status(201).json({ message: 'attendace marked', user:  row.username  ,subject:subject});
-                }
-              );
-            }
-          
+        'SELECT subject FROM subject WHERE qrcode = ?',
+        [qr],
+        async (err, subjectRow) => {
+          if (err) {
+            return res.status(500).json({ error: 'Internal server error' });
           }
-        )
-      
+
+          if (!subjectRow) {
+            return res.status(404).json({ error: 'QR code not found in subjects' });
+          }
+
+          const subject = subjectRow.subject;
+
+          db.run(
+            'INSERT INTO attendance (username, date, time, qrcode, subject) VALUES (?, ?, ?, ?, ?)',
+            [username, new Date().toLocaleDateString(), new Date().toLocaleTimeString(), qr, subject],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: 'Attendance marking failed' });
+              }
+
+              res.status(201).json({ message: 'Attendance marked', user: row.username, subject: subject });
+            }
+          );
+        }
+      );
     }
   );
-
-
 });
+
 
 
 app.post("/getqrcode", async(req, res) => {

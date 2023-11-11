@@ -10,8 +10,8 @@ function Signup({ navigation }) {
   const [password, setPassword] = useState('');
   const [isTeacher, setIsTeacher] = useState(false);
   const [secret, setSecret] = useState('');
-  setUsername(username.trim());
-  setPassword(password.trim());
+  // setUsername(username.trim());
+  // setPassword(password.trim());
   const  handleSignup = async () => {
     if (!username || !password) {
       ToastAndroid.show("Username and password are required", ToastAndroid.SHORT);

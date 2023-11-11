@@ -75,11 +75,13 @@ android {
 
     namespace "com.lexqr"
     defaultConfig {
+        missingDimensionStrategy 'react-native-camera', 'general' 
         applicationId "com.lexqr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
     }
     signingConfigs {
         debug {

@@ -60,9 +60,26 @@ def getqrcode(username,password,subject):
 # app.post("/attendances", (req, res) => {
 #   const {username, password,subject,qr} = req.body;
 
-def attendace(username,password,subject,qr):
-    url = f'{base_url}/attendances'
-    data = {'username': username, 'password': password,'subject':subject,'qr':qr}
+
+#    const url = api_url + '/getattendancesteacher';
+#     const data = {
+#       username: username,
+#       password: password,
+#       subject: subject,
+
+def getattendancesteacher(username,password,subject):
+    url = f'{base_url}/getattendancesteacher'
+    data = {'username': username, 'password': password,'subject':subject}
+    response = requests.post(url, json=data)
+    try:
+        return response.json()
+    except Exception as e:
+        return {'error': 'Invalid response from the server'}
+
+
+def attendace(username,password,qr):
+    url = f'{base_url}/setattendances'
+    data = {'username': username, 'password': password,'qr':qr}
     response = requests.post(url, json=data)
     try:
         return response.json()
@@ -107,11 +124,15 @@ if __name__ == '__main__':
     #   app.post("/attendances", (req, res) => {
     #   const {username, password,subject,qr} = req.body;
 
-    attendace_response = attendace('google', 'googlegoogle','Maths','714521')
-    print('attendace Response:', attendace_response)
+    # attendace_response = attendace('ritesh', 'pavan1234','252571')
+    # print('attendace Response:', attendace_response)
+
+    # # Test getattendancesteacher
+    getattendancesteacher_response = getattendancesteacher('pavan', 'pavan1234','Surajtech')
+    print('getattendancesteacher Response:', getattendancesteacher_response)
 
     # # Test getattendances
-    # getattendances_response = getattendances('Ritesh', 'pavan123')
+    # getattendances_response = getattendances('ritesh', 'pavan1234')
     # print('getattendances Response:', getattendances_response)
 
 
